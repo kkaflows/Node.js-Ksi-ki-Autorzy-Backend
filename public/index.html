@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+      <link href="/styles.css" rel="stylesheet" />
+  </head>
+  <body>
+    <h1 class="title">Book Shop</h1>
+    <div id="homepage">
+      <h1>Show Authors</h1>
+        <div id="authors"></div>
+        <h1>Show Books</h1>
+          <div id="books"></div>
+    </div>
+
+
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+        <script src="https://unpkg.com/react@15/dist/react.js"></script>
+        <script src="https://unpkg.com/react-dom@15/dist/react-dom.min.js"></script>
+
+        <!---Create React Component--->
+         <script type="text/babel">
+          var Authors = React.createClass({
+            getInitialState: function(){
+                            return({
+                                authors: []
+                            });
+                        },
+              render: function(){
+               var authors = this.state.authors;
+               authors = authors.map(function(author, index){
+                   return(
+                       <li key={index}>
+                            <span className="name">{author.surname}</span>
+                           <span className="name">{author.name}</span>
+                            <span className="name">{author.nationality}</span>
+
+                       </li>
+                   );
+               });
+                return(
+                  <div id="authors-container">
+                        <form id="show" onSubmit={this.handleSubmit}>
+
+                            <input type="submit" value="Show Authors" />
+                        </form>
+                        <ul>{authors}</ul>
+                    </div>
+                );
+              },
+          handleSubmit: function(e){
+            e.preventDefault();
+            fetch('/api/authors').then(function(data){
+                    return data.json();
+                }).then( json => {
+                    this.setState({
+                        authors: json
+                    });
+                    console.log(json);
+                });
+          }
+
+          });
+  ReactDOM.render(<Authors />, document.getElementById('authors'));
+        </script>
+
+
+
+
+
+        <script type="text/babel">
+         var Books = React.createClass({
+           getInitialState: function(){
+                           return({
+                               books: []
+                           });
+                       },
+
+             render: function(){
+              var books = this.state.books;
+              books = books.map(function(book, index){
+                  return(
+                      <li key={index}>
+                           <span className="name">{book.title}</span>
+                          <span className="number">{book.year}</span>
+                           <span className="name">{book.genre}</span>
+
+                      </li>
+                  );
+              });
+               return(
+                 <div id="books-container">
+                       <form id="show" onSubmit={this.handleSubmit}>
+
+                           <input type="submit" value="Show Books" />
+                       </form>
+                       <ul>{books}</ul>
+                   </div>
+               );
+             },
+         handleSubmit: function(e){
+           e.preventDefault();
+           fetch('/api/books').then(function(data){
+                   return data.json();
+               }).then( json => {
+                   this.setState({
+                       books: json
+                   });
+                   console.log(json);
+               });
+
+
+         }
+
+         });
+ ReactDOM.render(<Books />, document.getElementById('books'));
+       </script>
+
+  </body>
+</html>
